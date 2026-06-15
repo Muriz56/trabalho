@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Ephyra Finance ajuda voce a organizar suas financas pessoais de forma simples e intuitiva.">
+  <title>Ephyra Finance</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Cabecalho com identidade, chamada principal e saldo atual. -->
+    <header class="hero">
+      <nav class="topbar" aria-label="Navegacao principal">
+        <a class="brand" href="#" aria-label="Ephyra Finance - inicio">
+          <span class="brand-icon" aria-hidden="true">💧</span>
+          <span>
+            <strong>Ephyra Finance</strong>
+            <small>Controle pessoal</small>
+          </span>
+        </a>
+
+        <button class="clear-button" id="clearDataButton" type="button">
+          <span aria-hidden="true">🧹</span>
+          Limpar Todos os Dados
+        </button>
+      </nav>
+
+      <section class="hero-content" aria-labelledby="heroTitle">
+        <div>
+          <p class="eyebrow">Organizacao financeira sem complicacao</p>
+          <h1 id="heroTitle">Veja seu dinheiro com clareza.</h1>
+          <p class="hero-text">
+            Registre receitas e despesas, acompanhe seu saldo e visualize a regra 50/30/20 automaticamente.
+          </p>
+        </div>
+
+        <div class="balance-card" aria-label="Resumo do saldo atual">
+          <span class="card-icon" aria-hidden="true">💰</span>
+          <span class="card-label">Saldo atual</span>
+          <strong id="balanceAmount">R$ 0,00</strong>
+          <small id="balanceStatus">Tudo pronto para comecar.</small>
+        </div>
+      </section>
+    </header>
+
+    <main>
+      <!-- Cartoes principais do dashboard financeiro. -->
+      <section class="metrics-grid" aria-label="Resumo financeiro">
+        <article class="metric-card">
+          <span class="metric-icon" aria-hidden="true">📈</span>
+          <div>
+            <p>Total de receitas</p>
+            <strong id="incomeAmount">R$ 0,00</strong>
+          </div>
+        </article>
+
+        <article class="metric-card expense-card">
+          <span class="metric-icon" aria-hidden="true">📉</span>
+          <div>
+            <p>Total de despesas</p>
+            <strong id="expenseAmount">R$ 0,00</strong>
+          </div>
+        </article>
+
+        <article class="metric-card">
+          <span class="metric-icon" aria-hidden="true">🧭</span>
+          <div>
+            <p>Transacoes</p>
+            <strong id="transactionCount">0</strong>
+          </div>
+        </article>
+      </section>
+
+      <section class="alert-panel is-hidden" id="overspendingAlert" role="alert">
+        <span aria-hidden="true">⚠️</span>
+        <p>Suas despesas ultrapassaram suas receitas.</p>
+      </section>
+
+      <section class="content-grid">
+        <div class="left-column">
+          <!-- Formulario de cadastro de receitas e despesas. -->
+          <section class="panel" aria-labelledby="formTitle">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Novo registro</p>
+                <h2 id="formTitle">Cadastrar transacao</h2>
+              </div>
+              <span aria-hidden="true">✍️</span>
+            </div>
+
+            <form class="transaction-form" id="transactionForm" autocomplete="off">
+              <label for="descriptionInput">
+                Descricao
+                <input id="descriptionInput" name="description" type="text" placeholder="Ex.: Salario, mercado, aluguel" maxlength="80" required>
+              </label>
+
+              <label for="amountInput">
+                Valor
+                <input id="amountInput" name="amount" type="text" inputmode="decimal" placeholder="0,00" required>
+              </label>
+
+              <fieldset>
+                <legend>Tipo</legend>
+                <div class="type-options">
+                  <label class="type-option">
+                    <input type="radio" name="type" value="income" checked>
+                    <span>💵 Receita</span>
+                  </label>
+
+                  <label class="type-option">
+                    <input type="radio" name="type" value="expense">
+                    <span>💳 Despesa</span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <p class="form-message" id="formMessage" aria-live="polite"></p>
+
+              <button class="primary-button" type="submit">
+                <span aria-hidden="true">➕</span>
+                Adicionar transacao
+              </button>
+            </form>
+          </section>
+
+          <section class="panel" aria-labelledby="chartTitle">
+            <div class="section-heading compact-heading">
+              <div>
+                <p class="eyebrow">Comparativo</p>
+                <h2 id="chartTitle">Receitas x despesas</h2>
+              </div>
+              <span aria-hidden="true">📊</span>
+            </div>
+
+            <div class="bar-chart" aria-label="Barra visual de receitas e despesas">
+              <div class="bar-row">
+                <div class="bar-copy">
+                  <strong>Receitas</strong>
+                  <span id="incomeBarValue">R$ 0,00</span>
+                </div>
+                <div class="bar-track" aria-hidden="true">
+                  <span class="bar-fill income-fill" id="incomeBar"></span>
+                </div>
+              </div>
+
+              <div class="bar-row">
+                <div class="bar-copy">
+                  <strong>Despesas</strong>
+                  <span id="expenseBarValue">R$ 0,00</span>
+                </div>
+                <div class="bar-track" aria-hidden="true">
+                  <span class="bar-fill expense-fill" id="expenseBar"></span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="right-column">
+          <!-- Regra financeira calculada a partir do total de receitas. -->
+          <section class="panel" aria-labelledby="ruleTitle">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Metodo 50/30/20</p>
+                <h2 id="ruleTitle">Distribuicao ideal</h2>
+              </div>
+              <span aria-hidden="true">🎯</span>
+            </div>
+
+            <div class="rule-grid">
+              <article class="rule-card">
+                <span aria-hidden="true">🏠</span>
+                <p>50% Necessidades</p>
+                <strong id="needsAmount">R$ 0,00</strong>
+              </article>
+
+              <article class="rule-card">
+                <span aria-hidden="true">✨</span>
+                <p>30% Desejos</p>
+                <strong id="wantsAmount">R$ 0,00</strong>
+              </article>
+
+              <article class="rule-card">
+                <span aria-hidden="true">🌱</span>
+                <p>20% Investimentos</p>
+                <strong id="investmentsAmount">R$ 0,00</strong>
+              </article>
+            </div>
+          </section>
+
+          <!-- Historico salvo no LocalStorage. -->
+          <section class="panel transactions-panel" aria-labelledby="listTitle">
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Historico</p>
+                <h2 id="listTitle">Transacoes</h2>
+              </div>
+              <span aria-hidden="true">🧾</span>
+            </div>
+
+            <ul class="transaction-list" id="transactionList" aria-live="polite"></ul>
+
+            <div class="empty-state" id="emptyState">
+              <span aria-hidden="true">🗂️</span>
+              <p>Nenhuma transacao cadastrada ainda.</p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
